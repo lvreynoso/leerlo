@@ -2,9 +2,14 @@
   "name": "leerlo",
   "version": "1.0.0",
   "description": "A Reddit clone project for BEW 1.2, except right-wing extremism and hate speech is explicitly disallowed.",
-  "main": "index.js",
+  "main": "./server/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --require @babel/polyfill --require @babel/register --exit",
+    "clean": "rm -rf server && mkdir server",
+    "build-server": "babel -d ./server ./source -s",
+    "build": "npm run clean && npm run build-server",
+    "start": "node ./server/server.js",
+    "dev": "nodemon --exec babel-node -- ./source/server.js"
   },
   "repository": {
     "type": "git",
@@ -17,12 +22,21 @@
   },
   "homepage": "https://github.com/lvreynoso/leerlo#readme",
   "dependencies": {
-    "@babel/core": "^7.1.2",
-    "@babel/node": "^7.0.0",
     "body-parser": "^1.18.3",
     "dotenv": "^6.1.0",
     "express": "^4.16.4",
     "express-handlebars": "^3.0.0",
     "mongoose": "^5.3.7"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.1.2",
+    "@babel/core": "^7.1.2",
+    "@babel/node": "^7.0.0",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/register": "^7.0.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.0",
+    "mocha": "^5.2.0"
   }
 }
