@@ -11,11 +11,15 @@ var _express = _interopRequireDefault(require("express"));
 
 var _bodyParser = _interopRequireDefault(require("body-parser"));
 
-var _mongoose = _interopRequireDefault(require("mongoose"));
-
 var _expressHandlebars = _interopRequireDefault(require("express-handlebars"));
 
-var _index = _interopRequireDefault(require("./routers/index.js"));
+var _expressValidator = _interopRequireDefault(require("express-validator"));
+
+var _index = _interopRequireDefault(require("./controllers/index.js"));
+
+var _posts = _interopRequireDefault(require("./controllers/posts.js"));
+
+var _database = _interopRequireDefault(require("./models/database.js"));
 
 var _exphbsConfig = _interopRequireDefault(require("./config/exphbs-config.js"));
 
@@ -32,11 +36,14 @@ app.use(_bodyParser.default.urlencoded({
   extended: true
 }));
 app.use(_bodyParser.default.json());
-app.engine('handlebars', exphbs.engine);
-app.set('view engine', 'handlebars');
-app.use(_express.default.static('public')); // routes
+app.use(_express.default.static('public'));
+app.use((0, _expressValidator.default)()); // set our view engine
 
-app.use('/', _index.default); // face the world
+app.engine('handlebars', exphbs.engine);
+app.set('view engine', 'handlebars'); // routes
+
+app.use('/', _index.default);
+app.use('/posts', _posts.default); // face the world
 
 const hotPort = app.get('port');
 const server = app.listen(hotPort, () => {
