@@ -14,7 +14,7 @@ import handlebars from 'express-handlebars'
 import index from './routers/index.js'
 
 // handlebars helpers
-import exphbsConfig from '../views/config/exphbs-config.js'
+import exphbsConfig from './config/exphbs-config.js'
 const exphbs = handlebars.create(exphbsConfig);
 
 // set our express options
