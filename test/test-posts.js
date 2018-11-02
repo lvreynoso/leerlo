@@ -21,13 +21,15 @@ describe('posts', function() {
         if (posts.length != null) {
             numberOfPosts = posts.length;
         }
+        posts.length.should.be.finite;
     })
 
     after(async function() {
         const query = {
             title: `test post title`
         }
-        await Post.findOneAndDelete(query).catch(err => console.log(err))
+        const result = await Post.findOneAndDelete(query).catch(err => console.log(err))
+        result.should.have.property('title', `test post title`);
     })
 
     // test post creation

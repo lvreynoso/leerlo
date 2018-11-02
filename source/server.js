@@ -13,6 +13,8 @@ import expressValidator from 'express-validator'
 // controllers
 import index from './controllers/index.js'
 import posts from './controllers/posts.js'
+import subleerlos from './controllers/subleerlos.js'
+import comments from './controllers/comments.js'
 
 // db and models
 import database from './database/database.js'
@@ -36,7 +38,9 @@ app.set('view engine', 'handlebars');
 
 // routes
 app.use('/', index)
+app.use('/l', subleerlos)
 app.use('/posts', posts)
+app.use('/comments', comments)
 
 // face the world
 const hotPort = app.get('port')

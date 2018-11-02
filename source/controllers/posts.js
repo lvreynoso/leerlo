@@ -14,10 +14,13 @@ posts.get('/', async (req, res) => {
 })
 
 // show one post
-posts.get('/:id', async (req, res) => {
-    console.log(req.params.id);
-    const post = await Post.findById(req.params.id).catch(err => console.log(err))
-    res.render(`posts-show`, { post });
+posts.get('/:id', async (req, res, next) => {
+    if (req.params.id == `new`) {
+        next()
+    } else {
+        const post = await Post.findById(req.params.id).populate(`comments`).catch(err => console.log(err))
+        res.render(`posts-show`, { post });
+    }
 })
 
 // get new post form
