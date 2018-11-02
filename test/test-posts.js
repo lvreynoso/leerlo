@@ -35,6 +35,7 @@ describe('posts', function() {
     // test post creation
     it(`Should create a new post`, async function() {
         const testPost = {
+            subleerlo: `test`,
             title: `test post title`,
             url: `https://www.google.com/`,
             summary: `post summary`
