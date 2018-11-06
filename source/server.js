@@ -9,12 +9,14 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import handlebars from 'express-handlebars'
 import expressValidator from 'express-validator'
+import cookieParser from 'cookie-parser'
 
 // controllers
 import index from './controllers/index.js'
 import posts from './controllers/posts.js'
 import subleerlos from './controllers/subleerlos.js'
 import comments from './controllers/comments.js'
+import auth from './controllers/auth.js'
 
 // db and models
 import database from './database/database.js'
@@ -22,6 +24,9 @@ import database from './database/database.js'
 // handlebars helpers
 import exphbsConfig from './config/exphbs-config.js'
 const exphbs = handlebars.create(exphbsConfig);
+
+// whatevers
+import checkAuth from './lib/check-auth.js'
 
 // set our express options
 const app = express();
@@ -32,6 +37,8 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(expressValidator());
+app.use(cookieParser());
+app.use(checkAuth);
 // set our view engine
 app.engine('handlebars', exphbs.engine);
 app.set('view engine', 'handlebars');
@@ -41,6 +48,7 @@ app.use('/', index)
 app.use('/l', subleerlos)
 app.use('/posts', posts)
 app.use('/comments', comments)
+app.use('/', auth)
 
 // face the world
 const hotPort = app.get('port')
