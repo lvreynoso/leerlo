@@ -27,6 +27,7 @@ const exphbs = handlebars.create(exphbsConfig);
 
 // whatevers
 import checkAuth from './lib/check-auth.js'
+import checkCookie from './lib/check-cookie.js'
 
 // set our express options
 const app = express();
@@ -38,10 +39,15 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(expressValidator());
 app.use(cookieParser());
-app.use(checkAuth);
+app.use(checkCookie);
+
 // set our view engine
 app.engine('handlebars', exphbs.engine);
 app.set('view engine', 'handlebars');
+
+// routes that need authentication
+app.use('/posts/new', checkAuth);
+app.use('/comments', checkAuth);
 
 // routes
 app.use('/', index)

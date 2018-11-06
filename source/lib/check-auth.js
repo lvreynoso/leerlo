@@ -1,16 +1,11 @@
 // check-auth.js
 
-import jwt from 'jsonwebtoken'
-
 const checkAuth = (req, res, next) => {
-    console.log(`Checking authentication!`);
-    if (typeof req.cookies.nToken === `undefined` || req.cookies.nToken === null) {
-        req.user = null;
+    if (req.user) {
+        next();
     } else {
-        const token = req.cookies.nToken;
-        const decodedToken = jwt.decode(token, { complete: true }) || {};
-        req.user = decodedToken.payload;
+        return res.status(401).send({ message: `401 Unauthorized`});
     }
-    next();
 }
+
 export default checkAuth;

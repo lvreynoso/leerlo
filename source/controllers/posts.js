@@ -33,14 +33,10 @@ posts.get('/new', (req, res) => {
 
 // create new post
 posts.post('/', async (req, res) => {
-    if (req.user) {
-        const post = new Post(req.body)
-        const savedPost = await post.save().catch(err => console.log(err))
-        console.log(savedPost);
-        res.redirect(`/`)
-    } else {
-        return res.status(401).send({ message: `401 Unauthorized`});
-    }
+    const post = new Post(req.body)
+    const savedPost = await post.save().catch(err => console.log(err))
+    console.log(savedPost);
+    res.redirect(`/`)
 })
 
 export default posts;
