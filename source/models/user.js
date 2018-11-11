@@ -10,7 +10,9 @@ const UserSchema = new Schema({
     updatedAt: { type: Date },
     password: { type: String, required: true, select: false },
     username: { type: String, required: true},
-    email: { type: String }
+    email: { type: String },
+    posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
+    comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }]
 })
 
 UserSchema.pre("save", function(next) {
