@@ -37,23 +37,21 @@ posts.get('/:id', async (req, res, next) => {
                 .catch(err => { console.log(err) })
             comments.push(rootComment)
         }
-        console.log("BEFORE POPULATING:");
-        console.log(comments);
         // get replies for each comment
         for (let i = 0; i < comments.length; i++) {
             comments[i] = await populateChildren(comments[i])
         }
-        console.log("AFTER POPULATING:");
-        console.log(comments);
         res.render(`posts-show`, { post, comments, currentUser });
     }
 
-    // recursively populate the comment tree
+    // recursively populate the comment tree LOL
     // poor database :( hope it can handle the load
     async function populateChildren(inputComment) {
         let outputComment = inputComment
         for (let i = 0; i < inputComment.children.length; i++) {
             let childComment = await Comment.findById(inputComment.children[i])
+                .populate(`author`)
+                .catch(err => { console.log(err) })
             if (childComment.children.length > 0) {
                 childComment = await populateChildren(childComment)
             }
