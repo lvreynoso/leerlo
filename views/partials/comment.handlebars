@@ -1,0 +1,9 @@
+<div class="col-xs-12 comment-indent">
+    <h6>{{this.author.username}}</h6>
+    <h6>{{this.createdAt}}</h6>
+    <p>{{this.content}}</p>
+    <a href="/comments/{{this._id}}/replies/new">Reply</a>
+    {{#each this.children}}
+        {{> comment}}
+    {{/each}}
+</div>

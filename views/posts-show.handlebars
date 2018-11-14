@@ -6,16 +6,14 @@
             <h6>by: {{post.author.username}}</h6>
             <p>{{post.summary}}</p>
             <form action="/comments" method="post">
-                <input type="hidden" name="postId" value="{{post._id}}">
+                <input type="hidden" name="post" value="{{post._id}}">
                 <textarea class='form-control' name="content" placeholder="Comment"></textarea>
                 <div class="text-right">
                     <button type="submit">Save</button>
                 </div>
             </form>
-            {{#each post.comments}}
-                <h6>{{this.author.username}}</h6>
-                <h6>{{this.createdAt}}</h6>
-                <p>{{this.content}}</p>
+            {{#each comments}}
+                {{> comment}}
             {{/each}}
         </div>
     </div>

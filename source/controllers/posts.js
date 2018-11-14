@@ -7,6 +7,7 @@ const posts = express.Router()
 // model
 import Post from '../models/post.js'
 import User from '../models/user.js'
+import Comment from '../models/comment.js'
 
 // show all posts
 posts.get('/', async (req, res) => {
@@ -22,14 +23,45 @@ posts.get('/:id', async (req, res, next) => {
         next()
     } else {
         const post = await Post.findById(req.params.id)
-            .populate({
-                path: `comments`,
-                populate: { path: `author` }
-            })
+            // .populate({
+            //     path: `comments`,
+            //     populate: { path: `author` }
+            // })
             .populate(`author`)
             .catch(err => console.log(err))
-        res.render(`posts-show`, { post, currentUser });
+        // get root comments
+        const comments = []
+        for (let i = 0; i < post.comments.length; i++) {
+            const rootComment = await Comment.findById(post.comments[i])
+                .populate(`author`)
+                .catch(err => { console.log(err) })
+            comments.push(rootComment)
+        }
+        console.log("BEFORE POPULATING:");
+        console.log(comments);
+        // get replies for each comment
+        for (let i = 0; i < comments.length; i++) {
+            comments[i] = await populateChildren(comments[i])
+        }
+        console.log("AFTER POPULATING:");
+        console.log(comments);
+        res.render(`posts-show`, { post, comments, currentUser });
     }
+
+    // recursively populate the comment tree
+    // poor database :( hope it can handle the load
+    async function populateChildren(inputComment) {
+        let outputComment = inputComment
+        for (let i = 0; i < inputComment.children.length; i++) {
+            let childComment = await Comment.findById(inputComment.children[i])
+            if (childComment.children.length > 0) {
+                childComment = await populateChildren(childComment)
+            }
+            outputComment.children[i] = childComment
+        }
+        return outputComment
+    }
+
 })
 
 // get new post form
