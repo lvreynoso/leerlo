@@ -1,10 +1,25 @@
 <!-- posts-show.handlebars -->
+<script rel="script" src="/scripts/posts-script.js"></script>
 <div class="container">
     <div class="row">
         <div class="col-sm-6 col-sm-offset-3">
-            <a href="{{post.url}}" class="lead">{{post.title}}</a>
-            <h6>by: {{post.author.username}}</h6>
-            <p>{{post.summary}}</p>
+            <li class="list-group-item">
+                <div class="lead">{{post.title}} (Score: {{post.score}})</div>
+                <a href="{{post.url}}" target="_blank">{{post.url}}<a>
+                        <h6>by: {{post.author.username}}</h6>
+                        <p>{{post.summary}}</p>
+                        <div class="text-right">
+                            <a href="/n/{{post.subleerlo}}">{{post.subleerlo}}<a>
+                        </div>
+
+                        <form class="vote-up" data-id="{{post._id}}">
+                            <button type="submit">Vote Up</button>
+                        </form>
+                        |
+                        <form class="vote-down" data-id="{{post._id}}">
+                            <button type="submit">Vote Down</button>
+                        </form>
+            </li>
             <form action="/comments" method="post">
                 <input type="hidden" name="post" value="{{post._id}}">
                 <textarea class='form-control' name="content" placeholder="Comment"></textarea>
@@ -17,4 +32,5 @@
             {{/each}}
         </div>
     </div>
+
 </div>

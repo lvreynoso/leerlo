@@ -10,8 +10,14 @@ const PostSchema = new Schema({
     url: { type: String, required: true },
     summary: { type: String, required: true },
     author: { type: Schema.Types.ObjectId, ref: "User", required: true},
-    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }]
+    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
+    upvotes: { type: Number, default: 0 },
+    downvotes: { type: Number, default: 0 }
 }, { timestamps: true });
+
+PostSchema.virtual('score').get(function () {
+    return this.upvotes - this.downvotes;
+})
 
 const Post = mongoose.model('Post', PostSchema);
 export default Post;

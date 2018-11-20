@@ -22,11 +22,8 @@ posts.get('/:id', async (req, res, next) => {
     if (req.params.id == `new`) {
         next()
     } else {
+        // get the post
         const post = await Post.findById(req.params.id)
-            // .populate({
-            //     path: `comments`,
-            //     populate: { path: `author` }
-            // })
             .populate(`author`)
             .catch(err => console.log(err))
         // get root comments
@@ -46,6 +43,9 @@ posts.get('/:id', async (req, res, next) => {
 
     // recursively populate the comment tree LOL
     // poor database :( hope it can handle the load
+    // TODO: Replace this with something like Edwin's 'pre' hook
+    // then again, you could modify this to limit the number of comments
+    // fetched to a certain level of nesting
     async function populateChildren(inputComment) {
         let outputComment = inputComment
         for (let i = 0; i < inputComment.children.length; i++) {
@@ -80,6 +80,68 @@ posts.post('/', async (req, res) => {
     user.posts.unshift(post);
     const result = await user.save().catch(err => console.log(err))
     res.redirect(`/`)
+})
+
+// upvote a post
+posts.put(`/:id/vote-up`, async (req, res) => {
+    const post = await Post.findById(req.params.id).catch(err => { console.log(err) })
+    const user = await User.findById(req.user._id).catch(err => { console.log(err) })
+    let previousVote = null;
+    if (user.votes.get(req.params.id) != undefined) {
+        previousVote = user.votes.get(req.params.id)
+    }
+    console.log(previousVote);
+    switch (previousVote) {
+        // there's already an upvote, do nothing
+        case true:
+            break;
+        // there's a downvote
+        case false:
+            user.votes.set(req.params.id, true)
+            post.downvotes -= 1
+            post.upvotes += 1
+            break;
+        // there's nothing there
+        default:
+            user.votes.set(req.params.id, true)
+            post.upvotes += 1
+    }
+    await post.save()
+    await user.save()
+    res.status(200).send({
+        previousVote: previousVote
+    })
+})
+
+// downvote a post
+posts.put(`/:id/vote-down`, async (req, res) => {
+    const post = await Post.findById(req.params.id).catch(err => { console.log(err) })
+    const user = await User.findById(req.user._id).catch(err => { console.log(err) })
+    let previousVote = null;
+    if (user.votes.get(req.params.id) != undefined) {
+        previousVote = user.votes.get(req.params.id)
+    }
+    console.log(previousVote);
+    switch (previousVote) {
+        // there's an upvote
+        case true:
+            user.votes.set(req.params.id, false)
+            post.downvotes += 1
+            post.upvotes -= 1
+            break;
+        // there's a downvote, do nothing
+        case false:
+            break;
+        // there's nothing there
+        default:
+            user.votes.set(req.params.id, false)
+            post.downvotes += 1
+    }
+    await post.save()
+    await user.save()
+    res.status(200).send({
+        previousVote: previousVote
+    })
 })
 
 export default posts;

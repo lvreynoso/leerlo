@@ -48,6 +48,8 @@ app.set('view engine', 'handlebars');
 // routes that need authentication
 app.use('/posts/new', checkAuth);
 app.use('/comments', checkAuth);
+app.use('/posts/:id/vote-up', checkAuth);
+app.use('/posts/:id/vote-down', checkAuth);
 
 // routes
 app.use('/', index)

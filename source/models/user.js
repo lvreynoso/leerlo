@@ -12,7 +12,9 @@ const UserSchema = new Schema({
     username: { type: String, required: true},
     email: { type: String },
     posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
-    comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }]
+    comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+    votes: { type: Map, of: Boolean, default: {} }
+
 })
 
 UserSchema.pre("save", function(next) {
