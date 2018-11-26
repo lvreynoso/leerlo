@@ -25,8 +25,6 @@ describe('posts', function() {
         }
         posts.length.should.be.finite;
 
-        const res = await 
-
     })
 
     after(async function() {

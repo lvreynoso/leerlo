@@ -90,7 +90,6 @@ posts.put(`/:id/vote-up`, async (req, res) => {
     if (user.votes.get(req.params.id) != undefined) {
         previousVote = user.votes.get(req.params.id)
     }
-    console.log(previousVote);
     switch (previousVote) {
         // there's already an upvote, do nothing
         case true:
@@ -121,7 +120,6 @@ posts.put(`/:id/vote-down`, async (req, res) => {
     if (user.votes.get(req.params.id) != undefined) {
         previousVote = user.votes.get(req.params.id)
     }
-    console.log(previousVote);
     switch (previousVote) {
         // there's an upvote
         case true:
