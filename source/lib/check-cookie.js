@@ -3,7 +3,7 @@
 import jwt from 'jsonwebtoken'
 
 const checkCookie = (req, res, next) => {
-    console.log(`Checking authentication!`);
+    // console.log(`Checking authentication!`);
     if (typeof req.cookies.nToken === `undefined` || req.cookies.nToken === null) {
         req.user = null;
     } else {

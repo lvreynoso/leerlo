@@ -13,7 +13,8 @@ const UserSchema = new Schema({
     email: { type: String },
     posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
     comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
-    votes: { type: Map, of: Boolean, default: {} }
+    votes: { type: Map, of: Boolean, default: {} },
+    admin: { type: Boolean }
 
 })
 

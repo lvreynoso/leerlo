@@ -25,6 +25,15 @@ describe('posts', function() {
         }
         posts.length.should.be.finite;
 
+        // mocha complains 'Error: Server is not listening' when the following
+        // code is run as part of the full test suite, but not when run
+        // by itself
+        const testUser = {
+            username: 'testone',
+            password: 'password'
+        }
+        const res = await agent.post(`/login`).send(testUser)
+        res.should.have.status(200)
     })
 
     after(async function() {
@@ -33,17 +42,19 @@ describe('posts', function() {
         }
         const result = await Post.findOneAndDelete(query).catch(err => console.log(err))
         // result.should.have.property('title', `test post title`);
+
+        agent.close();
     })
 
     // test post creation
-    it.skip(`Should create a new post`, async function() {
+    it(`Should create a new post`, async function() {
         const testPost = {
             subleerlo: `test`,
             title: `test post title`,
             url: `https://www.google.com/`,
             summary: `post summary`
         }
-        const res = await chai.request(server).post(`/posts`).send(testPost)
+        const res = await agent.post(`/posts`).send(testPost)
             .catch(err => { return err })
         const testPostQuery = await Post.find().catch(err => { return err })
         testPostQuery.length.should.be.equal(numberOfPosts + 1)

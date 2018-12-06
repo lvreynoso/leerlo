@@ -28,6 +28,7 @@ const exphbs = handlebars.create(exphbsConfig);
 // whatevers
 import checkAuth from './lib/check-auth.js'
 import checkCookie from './lib/check-cookie.js'
+import checkAdmin from './lib/check-admin.js'
 
 // set our express options
 const app = express();
@@ -50,6 +51,7 @@ app.use('/posts/new', checkAuth);
 app.use('/comments', checkAuth);
 app.use('/posts/:id/vote-up', checkAuth);
 app.use('/posts/:id/vote-down', checkAuth);
+app.use('/admin', checkAdmin);
 
 // routes
 app.use('/', index)

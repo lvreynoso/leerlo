@@ -17,7 +17,7 @@ const agent = chai.request.agent(server)
 describe('Authentication', function() {
 
     after(function() {
-        agent.close()
+        // agent.close()
     })
 
     it('Should not be able to login unless registered', async function() {

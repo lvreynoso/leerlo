@@ -70,7 +70,7 @@ posts.get('/new', (req, res) => {
 
 // create new post
 posts.post('/', async (req, res) => {
-    console.log(req.user);
+    // console.log(req.user);
     // save the post
     const post = new Post(req.body)
     post.author = req.user._id;

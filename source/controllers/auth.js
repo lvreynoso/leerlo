@@ -8,6 +8,11 @@ const auth = express.Router()
 // models
 import User from '../models/user.js'
 
+auth.get('/admin', (req, res) => {
+    const currentUser = req.user;
+    res.render('admin', { currentUser });
+})
+
 auth.get('/sign-up', (req, res) => {
     res.render('sign-up');
 })
@@ -38,7 +43,8 @@ auth.post(`/login`, async (req, res) => {
     const query = {
         username: username
     }
-    const user = await User.findOne(query, `username password`).catch(err => { console.log(err) })
+    const user = await User.findOne(query, `username password admin`).catch(err => { console.log(err) })
+    // console.log(user);
     if (!user) {
         // user not found
         return res.status(401).send({ message: `Wrong username or password` });
@@ -49,7 +55,7 @@ auth.post(`/login`, async (req, res) => {
             return res.status(401).send({ message: `Wrong username or password` });
         }
         // create a token
-        const token = jwt.sign({ _id: user._id, username: user.username }, process.env.SECRET, {
+        const token = jwt.sign({ _id: user._id, username: user.username, admin: user.admin }, process.env.SECRET, {
             expiresIn: `60 days`
         });
         res.cookie(`nToken`, token, { maxAge: 900000, httpOnly: true });
